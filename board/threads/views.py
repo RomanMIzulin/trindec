@@ -10,9 +10,11 @@ def index(request):
     #return render(request, 'threads/index.html', content_type='application/xhtml+xml')
     thread_list = Thread.objects.all()
     dic = dict()
-    for thread in thread_list:
-        dic.update({thread.id:OnePost.objects.filter(thread_id=thread.id)})
-    context = {'thread_list_all': thread_list, 'dic' : dic  }
+    posts_list = []
+    for thread in Thread.objects.all():
+        posts_list += OnePost.objects.filter(thread_id = thread.id)
+        dic.update({thread: OnePost.objects.filter(published_date = thread.published_date)})
+    context = {'thread_list_all': thread_list, 'dic' : dic }
     return render(request, 'threads/index.html',context)
 
 
@@ -24,12 +26,15 @@ def creation(request):
     context = {'text_of_thread': request}
     t = Thread()
     t.published_date = timezone.now()
+    t.number_of_OnePost = 0
+    t.id = len(Thread.objects.all())+1
     p = OnePost()
+    p.id = len(OnePost.objects.all())+1
     p.published_date = timezone.now()
-    p.thread = t
-    p.text = text_of_post(request)
-    p.id = 3
     t.save()
+    p.thread = t
+    p.text = request.GET['text_of_thread']
+    p.number_of_replies = 0
     p.save()
     return redirect('thread/' + str(t.id))
 
