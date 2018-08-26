@@ -1,0 +1,16 @@
+<p>TEXT</p>
+{% if thread_list_all %}
+	{% for thread in thread_list_all %}
+		<ul>
+            <li><a  href="{{thread.url}}">{{thread.id}}</a>
+                {% if dic  %}
+                    {% for note in dic  %}
+                        <p>text{{note}}</p>
+                        <p>{{dic[1]}}</p>
+                    {% endfor %}
+                {% endif %}
+                    
+			</li>
+		</ul>
+	{% endfor %}
+{% endif %}
